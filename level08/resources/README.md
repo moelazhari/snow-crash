@@ -23,7 +23,6 @@ ls -la
 
 #### 1. Test Binary Behavior
 The binary restricts access to files named "token":
-
 ```bash
 ./level08 token
 ```
