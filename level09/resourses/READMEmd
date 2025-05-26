@@ -1,0 +1,92 @@
+# Level09 Documentation
+
+## Objective
+Decode an obfuscated token file to retrieve credentials for `flag09` and obtain the `level10` token.
+
+---
+
+## Approach & Tools
+- **Technique**: Reverse engineering character encoding scheme
+- **Commands**: `gcc`, `xargs`, `su`, `getflag`
+- **Tools**: Custom C decoder (or Python alternative)
+
+---
+
+## Step-by-Step Solution
+once we log into level08 account we find a ```level08```nad ```token``` files
+```bash
+ls -la
+```
+#### output 
+```bash
+-rwsr-s---+ 1 flag08  level08 8617 Mar 5 2016 level08
+-rw-------  1 flag08  flag08    26 Mar  5  2016 token
+```
+### 1. Examine the Token
+```bash
+cat token
+```
+#### Output:
+```bash
+f4kmm6p|=�p�n��DB�Du{��
+```
+
+### 2. Understand the Encoding Scheme
+Testing the binary reveals the pattern:
+
+```bash
+./level09 "abcdefgh"
+```
+#### Output:
+```bash
+acegikmo
+```
+Encoding Logic: Each character is transformed using encoded_char = original_char + position_index
+### 3. Create a Decoder Program
+Save as /tmp/decode.c:
+
+```c
+#include <stdio.h>
+
+int main(int argc, char **argv) {
+    char *token = argv[1];
+
+    for(int i = 0; *token; token++, i++) {
+        printf("%c", *token - i);
+    }
+    printf("\n");
+    return 0;
+}
+```
+Compile in /tmp:
+
+```bash
+cd /tmp
+gcc decode.c -o decode
+```
+### 4. Decode the Token
+```bash
+cat /home/user/level09/token | xargs decode
+```
+### Output:
+```bash
+f3iji1ju5yuevaus41q1afiuq
+```
+
+### 6. Retrieve Level10 Token
+```bash
+su flag09
+Password: f3iji1ju5yuevaus41q1afiuq
+getflag
+```
+#### Output:
+```bash
+Check flag.Here is your token : s5cAJpM8ev6XHw998pRWG728z
+```
+### Key Takeaways
+
+* Pattern Recognition: Input/output testing revealed the simple encoding algorithm
+
+* Decoder Implementation: Writing minimal C programs can solve challenges effectively
+
+* Workspace Limitations: /tmp is often the only writable directory
