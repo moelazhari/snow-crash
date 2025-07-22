@@ -14,7 +14,7 @@ Gain access to the `flag00` account and retrieve the token for the next level (`
 
 ## Step-by-Step Solution
 
-### 1. Locate Files Owned by `flag00`
+### 1. Locate Files Owned by `flag00
 Run the `find` command to identify files accessible only to the `flag00` 
 ```bash
 find / -user flag00 2>/dev/null
